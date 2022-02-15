@@ -1,6 +1,9 @@
 #include<iostream>
 #include<cmath>
+#include <math.h>
 using namespace std;
+
+#define PI 3.14159265
 
 class ComplexNumber{				
 	public:
@@ -9,9 +12,14 @@ class ComplexNumber{
 		ComplexNumber(double,double);
 		ComplexNumber operator+(const ComplexNumber &);
 		ComplexNumber operator-(const ComplexNumber &);
+		ComplexNumber operator+(double);
+		ComplexNumber operator-(double);
 		ComplexNumber operator*(const ComplexNumber &);
 		ComplexNumber operator/(const ComplexNumber &);
+		ComplexNumber operator*(double);
+		ComplexNumber operator/(double);
 		bool operator==(const ComplexNumber &);
+		bool operator==(double);
 		double abs();
 		double angle();
 };
@@ -27,6 +35,94 @@ ComplexNumber ComplexNumber::operator+(const ComplexNumber &c){
 ComplexNumber ComplexNumber::operator-(const ComplexNumber &c){
 	return ComplexNumber(real-c.real,imag-c.imag);
 }
+
+ComplexNumber ComplexNumber::operator+(double num){
+	return ComplexNumber(real+num,imag);
+}
+
+ComplexNumber ComplexNumber::operator-(double num){
+	return ComplexNumber(real-num,imag);
+}
+
+ComplexNumber ComplexNumber::operator*(const ComplexNumber &c){
+	double result_r = (real*c.real)-(imag*c.imag);
+	double result_i = (imag*c.real)+(real*c.imag);
+	return ComplexNumber(result_r,result_i);
+}
+
+ComplexNumber ComplexNumber::operator/(const ComplexNumber &c){
+	double result_r = ((real*c.real)+(imag*c.imag))/(pow(c.real,2)+pow(c.imag,2));
+	double result_i = ((imag*c.real)-(real*c.imag))/((pow(c.real,2)+pow(c.imag,2)));
+	return ComplexNumber(result_r,result_i);
+}
+
+ComplexNumber ComplexNumber::operator*(double num){
+	return ComplexNumber(real*num,imag*num);
+}
+
+ComplexNumber ComplexNumber::operator/(double num){
+	return ComplexNumber(real/num,imag/num);
+}
+
+ComplexNumber operator+(double num, const ComplexNumber &c){ 
+	return ComplexNumber(num+c.real,c.imag);
+}
+
+ComplexNumber operator-(double num, const ComplexNumber &c){
+	return ComplexNumber(num-c.real,-c.imag);
+}
+
+ComplexNumber operator*(double num, const ComplexNumber &c){
+	ComplexNumber T(num);
+	return T*c;
+}
+
+ComplexNumber operator/(double num, const ComplexNumber &c){
+	ComplexNumber T(num);
+	return T/c;
+}
+
+bool ComplexNumber::operator==(const ComplexNumber &c){
+	if(real == c.real && imag == c.imag)
+		return true;
+	return false;
+}
+
+bool ComplexNumber::operator==(double num){
+	ComplexNumber T(num);
+	if(real == T.real && imag == T.imag)
+		return true;
+	return false;
+}
+
+bool operator==(double num, const ComplexNumber &c){
+	ComplexNumber T(num);
+	if(c.real == T.real && c.imag == T.imag)
+		return true;
+	return false;
+}
+
+double ComplexNumber::abs(){
+	return sqrt(pow(real,2)+pow(imag,2));
+}
+
+double ComplexNumber::angle(){
+	return (atan2(imag,real) * 180 / PI);
+}
+
+
+ostream & operator<<(ostream &s, const ComplexNumber &c){
+	if(c.real == 0 && c.imag == 0)
+		return s << 0;
+	else if(c.real == 0)
+		return s << c.imag << "i";
+	else if(c.imag == 0)
+		return s << c.real;
+	else if(c.imag > 0)
+		return s << c.real << "+" << c.imag << "i";
+	else
+		return s << c.real << c.imag << "i";
+} 
 
 //Write your code here
 
@@ -70,8 +166,3 @@ int main(){
 	cout << (ComplexNumber(1,1) == 1) << "\n";
 	cout << (0 == ComplexNumber()) << "\n";
 }
-
-
-
-
-
